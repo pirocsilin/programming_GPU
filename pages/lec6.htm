@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 6. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">6. Профилирование программ</a></h3>
+
+<a href="#1" class=punkt>6.1. Сводный режим
+</a><br>
+<a href="#2" class=punkt>6.2. GPU-trace и API-trace</a><br>
+<a href="#3" class=punkt>6.3. События и метрики
+</a><br>
+<a href="#4" class=punkt>6.4. Полезные метрики
+</a><br>
+<a href="#5" class=punkt>6.5. Контрольные вопросы
+
+</a><br>
+
+</div>
+<!--начало-->
+<p>В комплект поставки Nvidia CUDA Tollkit входят графический профилировщик программ Nvidia Visual Profiler и консольный профилировщик программ nvprof.</p>
+<p>Утилита nvprof позволяет собирать информацию о активностях как на GPU так и на CPU включая исполнение функций-ядер, копирование данных, вызовы CUDA API, информацию о событиях, метрики функций-ядер, например пропускную способность памяти. Результаты отображаются сразу в консоли, но могут быть сохранены или импортированы в Visual Profiler.
+<p>Из командной строки синтаксис вызова утилиты nvprof выглядит следующим образом:</p>
+
+<p class=punkt>nvprof [options] [application] [application-arguments]</p>
+<p>Где options параметры профилировщика, application – приложение для которого будет собираться статистика, application-arguments – параметры принимаемые application.</p>
+<p>nvprof имеет несколько режимов работы: сводный режим, GPU-trace, API-trace, сводный режим + события и метрики, trace-mode + события и метрики.</p>
+<br>
+<a name=1 class="anchor"></a>
+<h3>6.1. Сводный режим</h3>
+<p>Сводный режим – режим работы по умолчанию. В этом режиме профилировщик выводит общее время работы функции-ядра на устройстве, количество вызовов функции-ядра, время, затраченное на копирование памяти (каждое направление копирования учитывается отдельно), сводку всех вызовов CUDA API.</p>
+
+<p>Пример работы nvprof в сводном режиме (число 27694 – номер профилируемого процесса):</p>
+<pre class="prettyprint">
+==27694== Profiling result:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 99.94%  1.11524s       301  3.7051ms  3.6928ms  3.7174ms  void matrixMulCUDA<int=32>(float*, float*, float*, int, int)
+  0.04%  406.30us         2  203.15us  136.13us  270.18us  [CUDA memcpy HtoD]
+  0.02%  248.29us         1  248.29us  248.29us  248.29us  [CUDA memcpy DtoH]
+
+==27964== API calls:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 49.81%  285.17ms         3  95.055ms  153.32us  284.86ms  cudaMalloc
+ 25.95%  148.57ms         1  148.57ms  148.57ms  148.57ms  cudaEventSynchronize
+ 22.23%  127.28ms         1  127.28ms  127.28ms  127.28ms  cudaDeviceReset
+  1.33%  7.6314ms       301  25.353us  23.551us  143.98us  cudaLaunch
+  0.25%  1.4343ms         3  478.09us  155.84us  984.38us  cudaMemcpy
+  0.11%  601.45us         1  601.45us  601.45us  601.45us  cudaDeviceSynchronize
+  0.10%  564.48us      1505     375ns     313ns  3.6790us  cudaSetupArgument
+  0.09%  490.44us        76  6.4530us     307ns  221.93us  cuDeviceGetAttribute
+  0.07%  406.61us         3  135.54us  115.07us  169.99us  cudaFree
+  0.02%  143.00us       301     475ns     431ns  2.4370us  cudaConfigureCall
+  0.01%  42.321us         1  42.321us  42.321us  42.321us  cuDeviceTotalMem
+  0.01%  33.655us         1  33.655us  33.655us  33.655us  cudaGetDeviceProperties
+  0.01%  31.900us         1  31.900us  31.900us  31.900us  cuDeviceGetName
+  0.00%  21.874us         2  10.937us  8.5850us  13.289us  cudaEventRecord
+  0.00%  16.513us         2  8.2560us  2.6240us  13.889us  cudaEventCreate
+  0.00%  13.091us         1  13.091us  13.091us  13.091us  cudaEventElapsedTime
+  0.00%  8.1410us         1  8.1410us  8.1410us  8.1410us  cudaGetDevice
+  0.00%  2.6290us         2  1.3140us     509ns  2.1200us  cuDeviceGetCount
+  0.00%  1.9970us         2     998ns     520ns  1.4770us  cuDeviceGet
+
+</Pre>
+<p>Сводку вызовов CUDA API можно отключить добавив опцию --profile-api-trace none при запуске профилировщика. Если расчёты производятся на нескольких GPU можно получить информацию для отдельно для каждого GPU добавив опцию --pront-summary-per-gpu.</p>
+<br>
+<a name=2 class="anchor"></a>
+<h3>6.2. GPU-trace и API-trace</h3>
+<p>Режимы GPU-trace и API-trace могут использоваться как вместе, так и по отдельности. GPU-trace выводит все действия выполненные на GPU в хронологическом порядке. Для каждой функции-ядра выводятся параметры используемой памяти (сколько выделено, пропускная способность и т.д.). Чтобы вызвать nvprof в режиме GPU-trace нужно во время вызова утилиты добавить опцию --print-gpu-trace.</p>
+<p>Пример вывода профилировщика в режиме GPU-trace (для читабельности таблица разбита на две части - левую и правую):</p>
+<pre class="prettyprint">
+Start  Duration            Grid Size      Block Size     Regs*    SSMem*
+ 133.81ms  135.78us                    -               -         -         -
+ 134.62ms  270.66us                    -               -         -         -
+ 134.90ms  3.7037ms            (20 10 1)       (32 32 1)        29  8.1920KB
+ 138.71ms  3.7011ms            (20 10 1)       (32 32 1)        29  8.1920KB
+ 1.24341s  3.7011ms            (20 10 1)       (32 32 1)        29  8.1920KB
+ 1.24711s  3.7046ms            (20 10 1)       (32 32 1)        29  8.1920KB
+ 1.25089s  248.13us                    -               -         -         -
+DSMem*      Size  Throughput           Device   Context    Stream  Name
+	-  409.60KB  3.0167GB/s  GeForce GT 640M         1         2  [CUDA memcpy HtoD]
+	-  819.20KB  3.0267GB/s  GeForce GT 640M         1         2  [CUDA memcpy HtoD]
+	0B        -           -  GeForce GT 640M         1         2  void matrixMulCUDA<int=32>(float*, float*, float*, int, int) [94]
+	0B        -           -  GeForce GT 640M         1         2  void matrixMulCUDA<int=32>(float*, float*, float*, int, int) [105]
+	0B        -           -  GeForce GT 640M         1         2  void matrixMulCUDA<int=32>(float*, float*, float*, int, int) [2191]
+	0B        -           -  GeForce GT 640M         1         2  void matrixMulCUDA<int=32>(float*, float*, float*, int, int) [2198]
+	-  819.20KB  3.3015GB/s  GeForce GT 640M         1         2  [CUDA memcpy DtoH]
+
+
+Regs: Number of registers used per CUDA thread. This number includes registers used internally by the CUDA driver and/or tools and can be more than what the compiler shows.
+SSMem: Static shared memory allocated per CUDA block.
+DSMem: Dynamic shared memory allocated per CUDA block.
+</Pre>
+<p>Режим API-trace показывает все вызовы CUDA API в хронологическом порядке. Для включения этого режима нужно добавить опцию --print-api-trace.</p>
+<p>Пример вывода в режиме API-trace:</p>
+<pre class="prettyprint">
+==27722== Profiling result:
+   Start  Duration  Name
+108.38ms  6.2130us  cuDeviceGetCount
+108.42ms     840ns  cuDeviceGet
+108.42ms  22.459us  cuDeviceGetName
+108.45ms  11.782us  cuDeviceTotalMem
+108.46ms     945ns  cuDeviceGetAttribute
+149.37ms  23.737us  cudaLaunch (void matrixMulCUDA<int=32>(float*, float*, float*, int, int) [2198])
+149.39ms  6.6290us  cudaEventRecord
+149.40ms  1.10156s  cudaEventSynchronize
+<...more output...>
+1.25096s  21.543us  cudaEventElapsedTime
+1.25103s  1.5462ms  cudaMemcpy
+1.25467s  153.93us  cudaFree
+1.25483s  75.373us  cudaFree
+1.25491s  75.564us  cudaFree
+1.25693s  10.901ms  cudaDeviceReset
+</Pre>
+<a name=3 class="anchor"></a>
+<h3>6.3. События и метрики</h3>
+<p>К двум предыдущим режимам можно добавить дополнительно опции для вывода информации о специфичных событиях и метриках. События и метрики можно указывать совместно. Чтобы задать одно или несколько событий нужно добавить при запуске nvprof опцию --events и после пробела перечислить события, для которых требуется собрать информацию. События перечисляются через запятую без пробелов. Чтобы задать одну или несколько метрик нужно добавить при запуске nvprof опцию --metrics и после пробела перечислить метрики, для которых требуется собрать информацию. Метрики перечисляются через запятую без пробелов. Если требуется собрать информацию по всем событиям или метрикам можно воспользоваться опциями --events all и --metrics all для событий и метрик соответственно. Чтобы посмотреть список всех доступных событий или метрик нужно запустить профилировщик с опцией --query-events или --query-metrics для событий и метрик соответственно.</p>
+<p>Пример запуска nvprof в сводном режиме с дополнительными метриками:</p>
+<pre class="prettyprint">
+nvprof --metrics gst_efficiency,gld_efficiency,gld_throughput,gst_throughput,dram_read_throughput,dram_write_throughput,gld_requested_throughput,gst_requested_throughput,global_hit_rate,dram_utilization ./cpy0
+
+threads per block = 1024
+Elapsed time: 61.8226 ms
+
+==8559== NVPROF is profiling process 8559, command: ./cpy0
+==8559== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+==8559== Profiling application: ./cpy0
+==8559== Profiling result:
+==8559== Metric result:
+Invocations                               Metric Name         Min         Max         Avg
+Device "GeForce GTX 1050 (0)"
+    Kernel: kernel_copy(int*, int*)
+          1                            gst_efficiency      82.04%      82.04%      82.04%
+          1                            gld_efficiency      82.04%      82.04%      82.04%
+          1                            gld_throughput  52.265GB/s  52.265GB/s  52.265GB/s
+          1                            gst_throughput  52.265GB/s  52.265GB/s  52.265GB/s
+          1                      dram_read_throughput  42.878GB/s  42.878GB/s  42.878GB/s
+          1                     dram_write_throughput  42.915GB/s  42.915GB/s  42.915GB/s
+          1                  gld_requested_throughput  42.876GB/s  42.876GB/s  42.876GB/s
+          1                  gst_requested_throughput  42.876GB/s  42.876GB/s  42.876GB/s
+          1                           global_hit_rate      48.70%      48.70%      48.70%
+          1                          dram_utilization    High (9)    High (9)    High (9)
+</pre>
+<p>В примере используются метрики пропускной способности памяти.</p>
+<br>
+<a name=4 class="anchor"></a>
+<h3>6.4. Полезные метрики</h3>
+<p>achieved_occupancy - процент заполняемости мультипроцессоров
+<p>branch_efficiency – доля варпов, выполненных без бранчей
+<p>warp_execution_efficiency – средняя доля активных нитей в варпах
+<p>inst_replay_overhead–повторы инструкций (из-за сериализации) / общее число выполненных устройством инструкций
+<p>shared_replay_overhead,global_cache_replay_overhead, local_replay_overhead–разделение предыдущего по причинам
+<p>dram_read_throughput–объем памяти, отданной ядру /  время выполнения
+<p>gld_throughput-объем глобальной памяти, отданной ядру /  время выполнения
+<p>gld_requested_throughput-объем глобальной памяти, запрошенный ядром /  время выполнения
+<p>gld_efficiency–gld_requested_throughput/ gld_throughput
+<p>dram_write_throughput, gst_throughput, gst_requested_throughput, gst_efficiency-аналогично для записи
+<p>l1_cache_global_hit_rate–доля кеш-попаданий при обращении к глобальной памяти
+<p>l1_cache_local_hit_rate–доля кеш-попаданий при обращении к локальной памяти
+<p>l2_l1_read_hit_rate–доля кеш попаданий при обращении кешаl1 к кешуl2
+<p>local_memory_overhead-доля локальной памяти в обменах между l1 и l2
+<p>IPC –число инструкций, запускаемых за цикл работы warp scheduler
+<br>
+<a name=5 class="anchor"></a>
+<h3>6.5. Контрольные вопросы</h3>
+<p>1.	Зачем используется утилита nvprof?
+<p>2.	В каких режимах работает утилита nvprof?
+<p>3.	Как добавить к выводу утилиты nvprof добавить информацию о дополнительных событиях?
+<p>4.	Как добавить к выводу утилиты nvprof добавить дополнительные метрики?
+<p>5.	Как посмотреть все доступные события для утилиты nvprof?
+<p>6.	Как посмотреть все доступные метрики для утилиты nvprof?
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec5.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec7.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

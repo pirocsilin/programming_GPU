@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 11. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">11. Текстурная память</a></h3>
+
+
+</div>
+<!--начало-->
+<p>Текстурная память является особым образом выделенной областью глобальной памяти. Обращение к текстурной памяти производится с использованием текстурного кэша, расположенного в мультипроцессоре по этому скорость в общем случае сопоставима со скоростью доступа к данным из L1 кэша. Текстурная память так-же позволяет использовать адресацию с плавающей точкой (при этом применяется линейная или билинейная интерполяция). Область видимости текстурной памяти – сетка блоков, с устройства доступна только для чтения. Для использования текстурной памяти необходимо задать объявление текстуры как глобальной переменной, а потом связать её с требуемой областью глобальной памяти. Тип данных для переменной, находящейся в текстурной памяти имеет вид texture<DataType, Type, ReadMode>, где DataType – тип данных текстурного элемента, Type – тип текстуры, может принимать значения cudaTextureType1D (по умолчанию), cudaTextureType2D, cudaTextureType3D, cudaTextureType1DLayered, cudaTextureType2DLayered, cudaTextureType3DLayered для одномерных, двумерных, трёхмерных текстур, текстур со слоями. ReadMode – спецификатор режима чтения. По умолчанию принимает значение cudaReadModeElementType – считывает текстуру, как элемент определённого типа, можно поменять на значение cudaReadModeNormalizedFloat – считывает текстуру как нормализованное число с плавающей точкой.</p>
+
+<p>Текстуре можно задать несколько важных параметров: нормализация – перевод отрезка [K,N] в отрезок [0,1], задаётся полем normalized объекта texture (значение true – выполнять нормализацию); преобразование адресов, если произошёл выход за пределы допустимого диапазона, поле addressMode объекта texture; способ фильтрации, если данные были заданы для целочисленных индексов, а доступ производится по индексам с плавающей точкой, поле filterMode объекта texture (cudaFilterModeLinear, если нужно выполнить интерполяцию и cudaFilterModePoint, если нужно возвращать значение ближайшей целочисленной координаты).</p>
+<p>Для привязки текстуры к области глобальной памяти можно воспользоваться функцией __host__ cudaError_t cudaBindTexture ( size_t* offset, const texture < T, dim, readMode > & tex, const void* devPtr, const cudaChannelFormatDesc& desc, size_t size = UINT_MAX ), которая привязывает size байт начиная с адреса devPtr к текстуре tex. Параметр offset – адрес по которому записано смещение текстуры в памяти. Параметр desc – формат текстурного элемента (опциональный параметр). Функция __host__ cudaError_t cudaBindTexture2D ( size_t* offset, const texture < T, dim, readMode > & tex, const void* devPtr, const cudaChannelFormatDesc& desc, size_t width, size_t height, size_t pitch ) используется для привязки двумерных массивов. Параметры width и height – ширина и высота (в количестве текстурных элементов), pitch – количество байт использованных для выравнивания при отображении двумерного массива в линейную память. Обе функции связывают текстуры с линейной областью памяти.</p>
+<p>Пример задания двумерной текстуры и связывания с линейной областью памяти:</p>
+<pre class="prettyprint">
+texture<float, cudaTextureType2D,
+        cudaReadModeElementType> texRef;
+cudaChannelFormatDesc channelDesc =
+                             cudaCreateChannelDesc<float>();
+size_t offset;
+cudaBindTexture2D(&offset, texRef, devPtr, channelDesc,
+                  width, height, pitch);
+</pre>
+<p>При помощи функции cudaCreateChannelDesc создаётся объект формата текстурного элемента. В качестве параметра передаётся тип данных, который будет храниться в текстурных элементах.</p>
+<p>Кроме линейной памяти текстуры можно привязывать к объектам типа cudaArray – тип данных представляющий массив, создан специально для работы с текстурами. Чтобы создать объект типа cudaArray нужно вызвать функцию __host__ cudaError_t cudaMallocArray ( cudaArray_t* array, const cudaChannelFormatDesc* desc, size_t width, size_t height = 0, unsigned int  flags = 0 ). Она выделяет память на устройстве размером width * height под текстуру с форматом desc. Параметр flags определяет какие дополнительные операции над текстурой можно производить. Функция __host__ cudaError_t cudaMalloc3DArray ( cudaArray_t* array, const cudaChannelFormatDesc* desc, cudaExtent extent, unsigned int  flags = 0 ) также создаёт объект cudaArray, но допускает от одного до трёх измерений.</p>
+<p>Для привязки текстуры к объекту cudaArray нужно вызвать функцию __host__ cudaError_t cudaBindTextureToArray ( const texture < T, dim, readMode > & tex, cudaArray_const_t array, const cudaChannelFormatDesc& desc ) – связывает текстуру tex с объектом array формата desc.</p>
+<p>Для считывания данных из текстур существует набор функций:</p>
+
+<p class=punkt>template<class T> T tex1Dfetch(cudaTextureObject_t texObj, int x) – считывает из линейной области памяти, связанного с одномерной текстурой данные, по целочисленной координате x. Работает только с ненормализованными координатами, фильтрация не выполняется.
+<p class=punkt>template<class T> T tex1D(cudaTextureObject_t texObj, float x) – считывает данные из одномерной текстуры, ассоциированной с объектом cudaArray, по координате x.
+<p class=punkt>template<class T> T tex2D(cudaTextureObject_t texObj, float x, float y) – считывает данные из двумерной текстуры, ассоциированной с объектом cudaArray, по координатам (x,y).
+<p class=punkt>template<class T> T tex3D(cudaTextureObject_t texObj, float x, float y, float z); – считывает данные из трёхмерной текстуры, ассоциированной с объектом cudaArray, по координатам (x,y,z).
+</p>
+<p>Пример демонстрирующий работу с двумерными текстурами:</p>
+<pre class="prettyprint">
+// объявление двумерной текстуры
+texture<float, cudaTextureType2D, cudaReadModeElementType> texRef;
+
+__global__ void transformKernel(float* output,
+                                int width, int height,
+                                float theta) 
+{
+    // вычисление нормализованных координат
+    unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
+    unsigned int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    float u = x / (float)width;
+    float v = y / (float)height;
+
+    // преобразование координат
+    u -= 0.5f;
+    v -= 0.5f;
+    float tu = u * cosf(theta) - v * sinf(theta) + 0.5f;
+    float tv = v * cosf(theta) + u * sinf(theta) + 0.5f;
+
+
+    // считывание данных из текстуры и запись в глобальную память
+    output[y * width + x] = tex2D(texRef, tu, tv);
+}
+
+int main()
+{
+    cudaChannelFormatDesc channelDesc =
+               cudaCreateChannelDesc(32, 0, 0, 0,
+                                     cudaChannelFormatKindFloat);
+    cudaArray* cuArray;
+    cudaMallocArray(&cuArray, &channelDesc, width, height);
+
+    // Копирование данных из памяти хоста в объект cudaArray
+    cudaMemcpyToArray(cuArray, 0, 0, h_data, size,
+                      cudaMemcpyHostToDevice);
+
+    // Установка параметров текстуры
+    texRef.addressMode[0] = cudaAddressModeWrap;
+    texRef.addressMode[1] = cudaAddressModeWrap;
+    texRef.filterMode     = cudaFilterModeLinear;
+    texRef.normalized     = true;
+
+    // Привязка текстуры к объекту cudaArray
+    cudaBindTextureToArray(texRef, cuArray, channelDesc);
+
+    float* output;
+    cudaMalloc(&output, width * height * sizeof(float));
+
+    dim3 dimBlock(16, 16);
+    dim3 dimGrid((width  + dimBlock.x - 1) / dimBlock.x,
+                 (height + dimBlock.y - 1) / dimBlock.y);
+    transformKernel<<<dimGrid, dimBlock>>>(output, width, height,
+                                           angle);
+    cudaFreeArray(cuArray);
+    cudaFree(output);
+
+    return 0;
+}
+</pre>
+<p>Текстуры поддерживают четыре типа преобразования адресов: cudaAddressModeClamp – возвращает ближайшее значение при выходе за границы; cudaAddressModeBorder – возвращает значение левой границы при выходе за границу; cudaAddressModeWrap – зацикливает диапазон с периодом M; cudaAddressModeMirror – зацикливает допустимый диапазон с периодом 2 * M - 2. Последние два типа работают только с нормализованными координатами.</p>
+<p>Пример различных типов преобразования адресов:</p>
+<pre class="prettyprint">
+texture<float, 1, cudaReadModeElementType> texture_clamp;
+texture<float, 1, cudaReadModeElementType> texture_border;
+texture<float, 1, cudaReadModeElementType> texture_wrap;
+texture<float, 1, cudaReadModeElementType> texture_mirror;
+
+/********************/
+/* CUDA ERROR CHECK */
+/********************/
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
+{
+    if (code != cudaSuccess) 
+    {
+        fprintf(stderr,"GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+        if (abort) exit(code);
+    }
+}
+
+/******************************/
+/* CUDA ADDRESS MODE CLAMPING */
+/******************************/
+__global__ void Test_texture_clamping(const int M) {
+
+    printf("Texture clamping - i = %i; value = %f\n", -threadIdx.x, tex1D(texture_clamp, -(float)threadIdx.x));
+    printf("Texture clamping - i = %i; value = %f\n", M + threadIdx.x, tex1D(texture_clamp, (float)(M + threadIdx.x)));
+
+}
+
+/****************************/
+/* CUDA ADDRESS MODE BORDER */
+/****************************/
+__global__ void Test_texture_border(const int M) {
+
+    printf("Texture border - i = %i; value = %f\n", -threadIdx.x, tex1D(texture_border, -(float)threadIdx.x));
+    printf("Texture border - i = %i; value = %f\n", M + threadIdx.x, tex1D(texture_border, (float)(M + threadIdx.x)));
+
+}
+
+/**************************/
+/* CUDA ADDRESS MODE WRAP */
+/**************************/
+__global__ void Test_texture_wrap(const int M) {
+
+    printf("Texture wrap - i = %i; value = %f\n", -threadIdx.x, tex1D(texture_wrap, -(float)threadIdx.x/(float)M));
+    printf("Texture wrap - i = %i; value = %f\n", M + threadIdx.x, tex1D(texture_wrap, (float)(M + threadIdx.x)/(float)M));
+
+}
+
+/****************************/
+/* CUDA ADDRESS MODE MIRROR */
+/****************************/
+__global__ void Test_texture_mirror(const int M) {
+
+    printf("Texture mirror - i = %i; value = %f\n", -threadIdx.x, tex1D(texture_mirror, -(float)threadIdx.x/(float)M));
+    printf("Texture mirror - i = %i; value = %f\n", M + threadIdx.x, tex1D(texture_mirror, (float)(M + threadIdx.x)/(float)M));
+
+}
+
+void main(){
+
+    const int M = 4;
+    float *h_data = (float*)malloc(M * sizeof(float));
+
+    for (int i=0; i<M; i++) h_data[i] = (float)i;
+
+    // --- Texture clamping
+    cudaArray* d_data_clamping = NULL; gpuErrchk(cudaMallocArray(&d_data_clamping, &texture_clamp.channelDesc, M, 1)); 
+    gpuErrchk(cudaMemcpyToArray(d_data_clamping, 0, 0, h_data, M * sizeof(float), cudaMemcpyHostToDevice)); 
+    cudaBindTextureToArray(texture_clamp, d_data_clamping); 
+    texture_clamp.normalized = false; 
+    texture_clamp.addressMode[0] = cudaAddressModeClamp;
+
+    dim3 dimBlock(2 * M, 1); dim3 dimGrid(1, 1);
+    Test_texture_clamping<<<dimGrid,dimBlock>>>(M);
+
+    printf("\n\n\n");
+
+    // --- Texture border
+    cudaArray* d_data_border = NULL; gpuErrchk(cudaMallocArray(&d_data_border, &texture_border.channelDesc, M, 1)); 
+    gpuErrchk(cudaMemcpyToArray(d_data_border, 0, 0, h_data, M * sizeof(float), cudaMemcpyHostToDevice)); 
+    cudaBindTextureToArray(texture_border, d_data_border); 
+    texture_border.normalized = false; 
+    texture_border.addressMode[0] = cudaAddressModeBorder;
+
+    Test_texture_border<<<dimGrid,dimBlock>>>(M);
+
+    printf("\n\n\n");
+
+    // --- Texture wrap
+    cudaArray* d_data_wrap = NULL; gpuErrchk(cudaMallocArray(&d_data_wrap, &texture_wrap.channelDesc, M, 1)); 
+    gpuErrchk(cudaMemcpyToArray(d_data_wrap, 0, 0, h_data, M * sizeof(float), cudaMemcpyHostToDevice)); 
+    cudaBindTextureToArray(texture_wrap, d_data_wrap); 
+    texture_wrap.normalized = true; 
+    texture_wrap.addressMode[0] = cudaAddressModeWrap;
+
+    Test_texture_wrap<<<dimGrid,dimBlock>>>(M);
+
+    printf("\n\n\n");
+
+    // --- Texture mirror
+    cudaArray* d_data_mirror = NULL; gpuErrchk(cudaMallocArray(&d_data_mirror, &texture_mirror.channelDesc, M, 1)); 
+    gpuErrchk(cudaMemcpyToArray(d_data_mirror, 0, 0, h_data, M * sizeof(float), cudaMemcpyHostToDevice)); 
+    cudaBindTextureToArray(texture_mirror, d_data_mirror); 
+    texture_mirror.normalized = true ; 
+    texture_mirror.addressMode[0] = cudaAddressModeMirror;
+
+    Test_texture_mirror<<<dimGrid,dimBlock>>>(M);
+
+    printf("\n\n\n");
+}
+</pre>
+<p>Вывод:</p><pre class="prettyprint">
+index                  -7  -6  -5  -4  -3  -2  -1  0  1  2  3  4  5  6  7  8  9  10  11
+clamp                   0   0   0   0   0   0   0  0  1  2  3  3  3  3  3  3  3   3   3
+border                  0   0   0   0   0   0   0  0  1  2  3  0  0  0  0  0  0   0   0
+wrap                    1   2   3   0   1   2   3  0  1  2  3  0  1  2  3  0  1   2   3
+mirror                  1   2   3   3   2   1   0  0  1  2  3  3  2  1  0  0  1   2   3
+</pre>
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec10.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec12.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

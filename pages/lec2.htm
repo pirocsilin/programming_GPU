@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 2. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">2. Отличия GPU от CPU</a></h3>
+
+</div>
+<!--начало-->
+<p>GPU (graphics processing unit, графический процессор) – устройство предназначенное для вычислений с высокой степенью параллелизма и абсолютно не подходит для сложных последовательных вычислений в силу своих архитектурных особенностей. Из-за этого GPU используется как вспомогательный сопроцессор, на котором исполняется параллельный код, а центральный процессор исполняет последовательный код и взаимодействует с остальными устройствами системы. Такая организация вычислений называется "гибридные вычисления", а система на которой реализуются гибридные вычисления – гетерогенной аппаратной вычислительной структурой (системой). Т.е. по своей сути это некоторая комбинация различных по принципу работы вычислительных устройств, объединённых в одну систему. В данный момент гибридные вычисления и гетерогенные системы чаще всего используются в контексте систем, использующих тандем CPU и GPU, но существуют и другие, в качестве примера можно привести системы с процессорами IBM Cell.</p>
+<p>Архитектура GPU сильно отличается от архитектуры CPU. Физическая модель CPU состоит из нескольких вычислительных ядер с высокой производительностью, исполняющие по 1-2 вычислительных потока, и памяти – кэша. При этом площадь, которую занимает кэш, больше чем площадь, занимаемая вычислительными ядрами, потому что задержки в вычислениях связанные с обращениями в медленную память (DRAM) CPU пытается скрыть, помещая часто используемые данные в кэш - небольшую область памяти с очень быстрым доступом.</p>
+<p><img src="img/img001.jpg"></p>
+<p>Рис. 1 – Физическая модель CPU</p>
+<br>
+<p>Архитектура GPU состоит из чипов памяти DRAM, L2 кэша и нескольких мультипроцессоров (SM), работающих независимо друг от друга. И наибольшую площадь занимают именно вычислительные блоки, а не память. Каждый SM представляет собой блок вычислителей с ресурсами. SM состоит из блока регистров, L1 кэша, константного кэша, текстурного кэша, разделяемой памяти (адресуемая область памяти, со скоростью доступа сопоставимой со скоростью доступа к данным из L1 кэша), большого количества CUDA ядер, блоков чтения/записи (LD/ST unit), множества блоков для вычисления специальных функций (SFU), занимающихся вычислением функций, значения которых находятся приближённо, например разложением в ряд (sin, cos, sqrt, exp и т.д.) и 2-4 планировщика варпов, по сути занимающихся распределением машинных команд по вычислительным ядрам. CUDA ядра состоят из множества блоков обрабатывающих операции над целыми числами (INT unit), множества блоков обрабатывающих операции над числами с плавающей точкой одинарной точности (FPU32) и множества блоков обрабатывающих операции над числами с плавающей точкой двойной точности (FPU64). Т.е. в отличие от CPU вычислительные ядра которого исполняют по 1-2 вычислительных потока, вычислительные ядра GPU могут исполнять тысячи вычислительных потоков, называемых нитями, но при этом вычислительные ядра GPU значительно уступают в производительности. Поэтому чтобы добиться наибольшего ускорения решения задачи при помощи GPU нужно разбить её на очень большое количество подзадач, чтобы использовать как можно больше вычислительных ядер GPU. Если этого не сделать, то последовательный алгоритм исполняемый на CPU может работать быстрее за счёт более высокой тактовой частоты вычислительных ядер CPU.</p>
+<p><img src="img/img002.jpg"></p>
+<p>Рис. 2 – Физическая модель GPU</p>
+<p><img src="img/img003.jpg"></p>
+<p>Рис. 3 – модель мультипроцессора</p>
+<br>
+<p>Не все нити, исполняющиеся на GPU вычисляются в один момент времени. Нити группируются по 32 нити, такая группа называется варп. Нити находящиеся в одном варпе гарантированно исполняются в один момент времени и исполняют они одинаковую машинную команду, но нити разных варпов не обязательно исполняют одинаковые команды. Такой принцип вычислений очень похож на SIMD - одна команда применяется ко множеству данных, но на GPU он работает в пределах одного варпа, поэтому принцип лежащий в основе обработки данных на GPU назвали SIMT (single instruction, multiple threads) - одна инструкция исполняется множеством нитей. Т.е. исполняемые машинные команды распределяются не по нитям, а сразу по группам нитей – варпам.</p>
+<p>Множество инструкций, поддерживаемых GPU зависит от так называемой версии мультипроцессора (compute capability, CC, вычислительная способность). С каждой новой версией CC добавляются новые вычислительные возможности (как правило с сохранением обратной совместимости, т.е. код разработанный под старые архитектуры с большой долей вероятности будет работать и на новой архитектуре) и могут изменяться параметры GPU такие как размеры кэшей, разделяемой памяти, размер варпа (хотя он никогда не менялся и с самых первых версий остаётся равен тридцати двум нитям, в следующих видеокартах его могут изменить).</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec1.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec3.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

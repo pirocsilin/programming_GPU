@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 7. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">7. Глобальная, локальная и константная память</a></h3>
+
+<a href="#1" class=punkt>7.1. Глобальная память
+
+</a><br>
+<a href="#2" class=punkt>7.2. Многомерные массивы в глобальной памяти
+</a><br>
+<a href="#3" class=punkt>7.3. Массивы структур и структуры массивов в глобальной памяти (AOS vs. SOA)
+
+</a><br>
+<a href="#4" class=punkt>7.4. Локальная память
+
+</a><br>
+<a href="#5" class=punkt>7.5. Константная память
+
+</a><br>
+<a href="#6" class=punkt>7.6. Контрольные вопросы
+
+</a><br>
+</div>
+<!--начало-->
+<a name=1 class="anchor"></a>
+<h3>7.1. Глобальная память</h3>
+<p>Глобальная память (global memory) – основная, медленная по скорости доступа к данным память, расположенная в чипах DRAM устройства. Область видимости глобальной памяти – сетка блоков функции-ядра. Глобальную память можно выделить динамически с помощью функции cudaMalloc (как в примере со сложением двух векторов) или статически, объявив глобальную переменную со спецификатором __device__.</p>
+<p>Пример выделения глобальной памяти динамически на хосте:</p>
+
+<pre class="prettyprint">
+__global__ void kernel(int*arrayOnDevice) {
+    arrayOnDevice[threaIdx.x] = threaIdx.x;
+}
+int main() {
+    size_tsize = 0;
+    void*devicePtr= NULL;
+    int hostMem[512];
+    cudaMalloc(&devicePtr, sizeof(hostMem));
+    cudaMemcpy(devicePtr, hostMem, size, cudaMemcpyHostToDevice);
+    kernel<<<1,512>>>(devicePtr);
+}</pre>
+<p>Пример выделения глобальной памяти статически:</p>
+<pre class="prettyprint">
+__device__ int arrayOnDevice[512]
+__global__ void kernel() {
+    arrayOnDevice[threaIdx.x] = threaIdx.x;
+}
+
+int main() {
+    size_t size = 0;
+    void *devicePtr = NULL;
+    int hostMem[512];
+    cudaGetSymbolSize(&size, arrayOnDevice);
+    cudaMemcpyToSymbol(arrayOnDevice, hostMem, size);
+    kernel<<<1,512>>>(devicePtr);
+}
+</Pre>
+<p>Функция __host__ cudaError_t cudaGetSymbolSize ( size_t* size, const T& symbol ) – определяет размер объекта переданного в качестве второго параметра. Параметр size – адрес по которому будет записан размер объекта symbol.</p>
+<p>__host__ cudaError_t cudaMemcpyToSymbol ( const T& symbol, const void* src, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyHostToDevice ) – копирует данные в объект symbol из источника src. Параметр count – размер копируемых данных. Параметр offset – смещение от начала symbol в байтах. kind – направление передачи данных, по умолчанию копирование идёт с хоста на устройство, но можно установить направление Device->Device.</p>
+<p>Ещё один пример работы со статически выделенной глобальной памятью:</p>
+<pre class="prettyprint">
+__device__ int arrayOnDevice[512];
+__global__ void kernel() {
+    arrayOnDevice[threaIdx.x] = threaIdx.x;
+}
+int main() {
+    size_t size = 0;
+    int hostMem[512];
+    void *devicePtr = NULL;
+    cudaGetSymbolSize(&size, arrayOnDevice);
+    cudaGetSymbolAddress(&devicePtr, arrayOnDevice);
+    cudaMemcpy(devicePtr, hostMem, size, cudaMemcpyHostToDevice);
+    kernel<<<1,512>>>();
+}
+</pre>
+<p>__host__ cudaError_t cudaGetSymbolAddress ( void** devPtr, const T& symbol ) – копирует в devPtr адрес объекта symbol. Если symbol не найден, значение devPtr остаётся неизменным.</p>
+<p>Функции-ядра обращаются не напрямую к глобальной памяти, а в кэши L1 и L2. В кэш L1 данные загружаются по 128 байт, а в L2 по 32 байта. Т.е. даже если функция-ядро запросит один байт из глобальной памяти при включенном кэшировании в L1 кэш будет загружено 128 байт. Таким образом наибольшей производительности при работе с глобальной памятью можно добиться, если нити варпа будут работать с отрезком в 128 байт с началом кратным 128. Доступ к глобальной памяти при котором соблюдается это условие называется <i>coalescing</i>.</p>
+<p><img src="img/img014.jpg"></p>
+<p>Рис 14 – пример coalescing'а</p>
+<p><img src="img/img014.jpg"></p>
+<p>Рис 15 – пример uncoalescing доступа к глобальной памяти</p>
+<br>
+<p>Пример функции-ядра работающей с глобальной памятью отрезками по 128 байт:</p>
+<pre class="prettyprint">
+__global__ void kernel_copy(int *a, int *c) {
+        int i = threadIdx.x + blockDim.x * blockIdx.x;
+        if(i < SIZE) {
+                c[i] = a[i];
+        }
+}
+</pre>
+<p>Вывод nvprof:</p>
+<pre class="prettyprint">
+Invocations                               Metric Name         Min         Max         Avg
+Device "GeForce GTX 1050 (0)"
+    Kernel: kernel_copy(int*, int*)
+          1                            gst_efficiency      82.04%      82.04%      82.04%
+          1                            gld_efficiency      82.04%      82.04%      82.04%
+          1                            gld_throughput  52.265GB/s  52.265GB/s  52.265GB/s
+          1                            gst_throughput  52.265GB/s  52.265GB/s  52.265GB/s
+          1                      dram_read_throughput  42.878GB/s  42.878GB/s  42.878GB/s
+          1                     dram_write_throughput  42.915GB/s  42.915GB/s  42.915GB/s
+          1                  gld_requested_throughput  42.876GB/s  42.876GB/s  42.876GB/s
+          1                  gst_requested_throughput  42.876GB/s  42.876GB/s  42.876GB/s
+          1                           global_hit_rate      48.70%      48.70%      48.70%
+          1                          dram_utilization    High (9)    High (9)    High (9)
+</pre>
+<p>При анализе профилировщиком использовались следующие метрики:</p>
+<p class=punkt>dram_utilization – уровень пропускной способности dram относительно пиковой пропускной способности (от 0 до 10).
+<p class=punkt>dram_read_throughput – пропускная способность считывания из dram.
+<p class=punkt>dram_write_throughput – пропускная способность записи в dram.
+<p class=punkt>global_hit_rate – процент попаданий в L1/texture кэш.
+<p class=punkt>gld_throughput – пропускная способность считывания из глобальной памяти
+<p class=punkt>gld_reqested_throughput – эффективная пропускная способность считываний из глобальной памяти.
+<p class=punkt>gld_efficiency – эффективность считываний из глобальной памяти – отношение эффективной пропускной способности считываний из глобальной памяти к общей пропускной способности считываний из глобальной памяти.
+<p class=punkt>gst_throughput – пропускная способность записи в глобальную память.
+<p class=punkt>gst_requested_throughput – эффективная пропускная способность записи в глобальную память.
+<p class=punkt>gst_efficiency – эффективность записи в глобальную – отношение gst_requested_throughput к gst_throughput.
+<br>
+<p>Пример функции-ядра, работающего с разбросанными по глобальной памяти данными:</p>
+<pre class="prettyprint">
+__global__ void kernel_copy(int *a, int *b) {
+        int i = threadIdx.x + blockDim.x * blockIdx.x;
+        if(i < SIZE) {
+                i = (i * 18) % SIZE;
+                c[i] = a[i];
+        }
+}
+Вывод профилировщика:
+Invocations                               Metric Name         Min         Max         Avg
+Device "GeForce GTX 1050 (0)"
+    Kernel: kernel_copy(int*, int*)
+          1                            gst_efficiency      12.50%      12.50%      12.50%
+          1                            gld_efficiency      12.50%      12.50%      12.50%
+          1                            gld_throughput  41.174GB/s  41.174GB/s  41.174GB/s
+          1                            gst_throughput  41.174GB/s  41.174GB/s  41.174GB/s
+          1                      dram_read_throughput  41.979GB/s  41.979GB/s  41.979GB/s
+          1                     dram_write_throughput  41.216GB/s  41.216GB/s  41.216GB/s
+          1                  gld_requested_throughput  5.1467GB/s  5.1467GB/s  5.1467GB/s
+          1                  gst_requested_throughput  5.1467GB/s  5.1467GB/s  5.1467GB/s
+          1                           global_hit_rate       0.00%       0.00%       0.00%
+          1                          dram_utilization    High (8)    High (8)    High (8)
+</pre>
+<p>Во втором случае заметно упала пропускная способность памяти – эффективность каждой транзакции, что дало существенное увеличение времени затраченного на выполнение функции-ядра 61 миллисекунда в первом случае против 84 миллисекунд во втором случае.</p>
+<p>Если доступ к глобальной памяти по каким-то причинам оптимизировать не получается, можно отключить L1 кэширование добавив опции -Xptxas -dlcm=cg при компиляции программы. В этом случае при трансляции в бинарный код не будут использоваться инструкции L1 кэша.</p>
+<p><img src="img/img016.jpg"></p>
+<p>Рис 16 – обращение к глобальной памяти с выключенным L1 кэшированием</p>
+<br>
+<a name=2 class="anchor"></a>
+<h3>7.2. Многомерные массивы в глобальной памяти</h3>
+<p>Первое правило при работе с многомерными массивами в глобальной памяти – не использовать косвенную адресацию. В качестве примера возьмём двумерный массив A[i][j]. При доступе к данным в двумерном массиве требуется два обращения в глобальную память (A[i] и A[i][j]), что противоречит желанию снизить количество обращений к минимуму из-за низкой скорости доступа к данным. Если обращения к A[i] из разных нитей варпа скорее всего попадут в одну транзакцию, то второе обращение (A[i][j]) в одну транзакцию не попадут. Поэтому многомерные массивы следует обрабатывать как одномерные.</p>
+<p>Пусть в глобальной памяти в линейном виде хранится матрица A с длиной строки в 120 элементов типа int (480 байт). Обращение к элементу матрицы – A[i*120 + j]. При построчной обработке элементов матрицы адреса запрашиваемых блоков глобальной памяти не будут кратны 128 байтам. Из-за этого каждое обращение варпа в память будет инициировать две транзакции из глобальной памяти. Для оптимизации доступа можно добавить в конце каждой строки неиспользуемую область памяти, чтобы размеры строк были кратны 128 байтам, что сократит количество транзакций.</p>
+<p>Для выделения линейной области памяти под матрицы рекомендуется использовать функцию __host__ cudaError_t cudaMallocPitch ( void** devPtr, size_t* pitch, size_t width, size_t height ). Она выделяет минимум width (в байтах) * height (в байтах) байт линейной памяти и записывает её адрес в devPtr. Функция может выделить больше памяти для того чтобы гарантировать, что доступ к строкам был выровненным. Фактическая ширина строки в байтах записывается в переменную pitch. Адрес элемента расположенного в строке Row и столбце Column рассчитывается по формуле T* pElement = (T*)((char*)BaseAddress + Row * pitch) + Column;. Где T – тип данных элемента, а BaseAddress – адрес начала массива.</p>
+<p>__host__ cudaError_t cudaMemcpy2D ( void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind ) – копирует матрицу из линейной области памяти src в линейную область памяти dst. Параметр dpitch – фактическая ширина строки получателя (в байтах). Параметр spitch – фактическая ширина строки источника (в байтах). Параметр width – сколько байт из строки источника нужно скопировать. Параметр height – количество строк которые будут скопированы. Параметр kind – направление копирования.</p>
+<p>Для работы с трёхмерными массивами рекомендуется использовать функции cudaMalloc3D и cudaMemcpy3D. Для создания массивов make_cudaExtent или make_cudaPitchedPtr</p>
+<p>Пример работы с двумерным массивом:</p>
+<pre class="prettyprint">
+__global__ void MyKernel(float* devPtr, size_t pitch, int width, int height) {
+    for (int r = 0; r < height; ++r) {
+        float* row = (float*)((char*)devPtr + r * pitch); 
+        for (int c = 0; c < width; ++c) { 
+            float element = row[c]; 
+        } 
+    }
+}
+
+int main () {
+    int width = 64, height = 64; 
+    float* devPtr; 
+    size_t pitch; 
+    cudaMallocPitch(&devPtr, &pitch, width * sizeof(float), height); 
+    MyKernel<<<100, 512>>>(devPtr, pitch, width, height); 
+}
+</pre>
+<p>Пример работы с трёхмерным массивом:</p>
+<pre class="prettyprint">
+__global__ void MyKernel(cudaPitchedPtr devPitchedPtr, int width, int height, int depth) 
+{ 
+    char* devPtr = devPitchedPtr.ptr; 
+    size_t pitch = devPitchedPtr.pitch;
+    size_t slicePitch = pitch * height; 
+    for (int z = 0; z < depth; ++z) { 
+        char* slice = devPtr + z * slicePitch; 
+        for (int y = 0; y < height; ++y) { 
+            float* row = (float*)(slice + y * pitch); 
+            for (int x = 0; x < width; ++x) { 
+                float element = row[x];
+            } 
+        } 
+    }     
+}
+
+int main () {
+    int width = 64, height = 64, depth = 64; 
+    cudaExtent extent = make_cudaExtent(width * sizeof(float), height, depth);
+    cudaPitchedPtr devPitchedPtr; 
+    cudaMalloc3D(&devPitchedPtr, extent); 
+    MyKernel<<<100, 512>>>(devPitchedPtr, width, height, depth); 
+}
+</pre>
+<p>Если доступ к элементам матрицы осуществляется не построчно, а по столбцам, то в любом случае потребуется больше одной транзакции для доступа к данным. Если такой доступ происходит больше одного раза, то имеет смысл транспонировать матрицу или если есть возможность изначально хранить её в транспонированном виде.</p>
+<br>
+<a name=3 class="anchor"></a>
+<h3>7.3. Массивы структур и структуры массивов в глобальной памяти (AOS vs. SOA)</h3>
+<p>Пусть есть структура состоящая из трёх целочисленных полей:</p>
+<pre class="prettyprint">
+struct example{
+    int a;
+    int b;
+    int c;
+}
+</pre>
+<p>И функция-ядро, обрабатывающая массив таких структур:</p>
+<pre class="prettyprint">
+__global__ void kernel(example *arrayOfExamples) {
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    arrayOfExamples[idx].c = arrayOfExamples[idx].b + arrayOfExamples[idx].a;
+}
+</pre>
+<p>При обращении нитей варпа за полями b будет совершено три транзакции, потому что в памяти эти поля расположены не рядом друг с другом, а на расстоянии в 8 байт (если не учитывать длину самого поля b).</p>
+<p><img src="img/img017.jpg"></p>
+<p>Рис. 17 – AOS</p>
+<br>
+<p>Если расположить одинаковые поля в памяти рядом друг с другом (использовать не массив структур, а структуру массивов), можно добиться того, что при обращении нитей варпа за значениями из конкретного поля будет совершена всего одна транзакция.</p>
+<pre class="prettyprint">
+struct example{
+    int *a;
+    int *b;
+    int *c;}
+
+__global__ void kernel(example arrayOfExamples) {
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    arrayOfExamples.c[idx] = arrayOfExamples.b[idx] + arrayOfExamples.a[idx];
+}
+</pre>
+<p><img src="img/img018.jpg"></p>
+<p>Рис. 18 – SOA</p>
+<br>
+<a name=4 class="anchor"></a>
+<h3>7.4. Локальная память</h3>
+<p><i>Локальная память</i> – используется для хранения локальных переменных, когда не хватает регистров; скорость доступа низкая, так как расположена в микросхемах DRAM, находящихся вне кристалла. Выделяется отдельно для каждой нити.</p>
+<br>
+<a name=5 class="anchor"></a>
+<h3>7.5. Константная память</h3>
+<p><i>Константная память</i> – память, располагающаяся в микросхемах DRAM, снабжена специальным константным кэшем. Из-за агрессивной стратегии кэширования обладает в среднем высокой скоростью доступа сравнимой с доступом к данным в L1 кэше, не смотря на то, что фактически находится в глобальной памяти. Данные в константную память можно записать только на хосте, на устройстве разрешён доступ только для чтения. Использование на устройстве не отличается от использования обычной переменной. Используется для передачи неизменяемых значений на устройство.</p>
+<p>Константную память можно выделить только статически, объявив глобальную переменную и указав для неё спецификатор __constant__. Например __constant__ float constData[256]. Для работы с константной памятью на хосте можно использовать функции cudaMemcpyToSymbol, cudaGetSymbolAddress, cudaGetSymbolSize, использовавшиеся ранее для работы с глобальной памятью.
+</p>
+<br>
+<a name=6 class="anchor"></a>
+<h3>7.6. Контрольные вопросы</h3>
+<p>1.	Какими свойствами обладает глобальная память?
+<p>2.	Как выделить область памяти в глобальной памяти? Как скопировать туда данные с хоста? Как скопировать оттуда данные на хост?
+<p>3.	Что такое coalescing?
+<p>4.	Почему может падать пропускная способность доступа к глобальной памяти?
+<p>5.	Что такое локальная память?
+<p>6.	Что такое константная память?
+<p>7.	Как скопировать данные с хоста в константную память?
+<p>8.	Можно ли изменять данные в константной памяти на устройстве?
+<p>9.	Реализуйте параллельный алгоритм обмена элементов массива между диапазоном (first1, last1) и (first2, last2). Количество элементов в диапазоне должно быть одинаково, иначе сигнализировать об ошибке.
+
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec6.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec8.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

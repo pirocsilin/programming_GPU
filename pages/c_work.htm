@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+ <meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="description" content="">
+ <meta name="author" content="do.sibsutis.ru">
+
+ <title>Контрольная работа. Программирование графических процессоров</title>
+
+ <link rel="icon" type="image/png" href="../lib/css/favicon.png">
+ <!-- Bootstrap Core CSS -->
+ <link href="../lib/css/bootstrap.css" rel="stylesheet">
+
+ <!-- Custom CSS -->
+ <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+ <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+ <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+ <!--[if lt IE 9]>
+ <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+ <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+ <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+ <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+ <!-- Brand and toggle get grouped for better mobile display -->
+ <div class="navbar-header">
+ <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+
+ <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+ <span class="icon-bar"></span>
+ <span class="icon-bar"></span>
+ <span class="icon-bar"></span>
+ </button>
+
+ <a class="navbar-brand " href="../index.htm">
+ <text class = "hidden-xs">Программирование графических процессоров</text>
+ <text class = "visible-xs">ПГП</text>
+ </a>
+ </div>
+
+ <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+ <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+ <!-- <ul class="nav navbar-nav">
+ <li><a href="#"></a></li>
+ </ul> -->
+
+ <ul class="nav navbar-nav navbar-right">
+ <li class="dropdown">
+ <button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+ <span class="icon-bar"></span>
+ <span class="icon-bar"></span>
+ <span class="icon-bar"></span>
+ </button>
+ <a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+  
+ <ul class="dropdown-menu">
+  
+ <li><a href="../index.htm">Аннотация курса</a></li>
+  
+ <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+  
+<li><a href="c_work.htm">Контрольная работа</a></li>
+ 
+ <li><a href="labs.htm">Лабораторные работы</a></li>
+ 
+ <li role="separator" class="divider"></li>
+     
+   
+  <li><a href="lit.htm">Литература</a></li>
+  
+
+  <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+   </ul>
+ </li>
+ </ul>
+ </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+ <div id="intro" class="section content-section ">
+ 
+<div class="container">
+ <div class="row">
+ <div class="col-lg-12">
+
+ 
+ <div class="page-header">
+  <h3>Контрольная работа</h3>
+ </div>
+
+
+<h3>Методические указания и задание на выполнение контрольной работы </h3>
+<br>
+<p>Для выполнения третьего задания
+контрольной работы понадобится видеокарта NVIDIA с поддержкой технологии CUDA. </p>
+
+<p>Поддерживает ли ваша видеокарта
+технологию CUDA, можно узнать в её спецификации на официальном сайте NVIDIA или
+в документах, идущих в комплекте с видеокартой. Кроме видеокарты вам
+понадобится установить <a
+href="https://developer.nvidia.com/cuda-downloads"><span
+style='color:#4183C4'>CUDA Toolkit</a><span
+style='color:#333333'>, компилятор с языка программирования C, текстовый
+редактор. На сайте NVIDIA есть инструкции для установки CUDA Toolkit под <a
+href="https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html"><span style='color:#4183C4'>Windows</a>, <a
+href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html"><span style='color:#4183C4'>Linux</a> и <a
+href="https://docs.nvidia.com/cuda/cuda-installation-guide-mac-os-x/index.html"><span style='color:#4183C4'>Mac OS X</a>.</p>
+
+<p>Если у вас нет такой видеокарты или
+нет возможности её использовать, напишите на электронный адрес <a
+href="mailto:mileschko.sibsutis@yandex.ru"><span style='color:#4183C4'>mileschko.sibsutis@yandex.ru</a> с просьбой выдать логин и пароль
+для подключения к серверу университета (не забудьте указать свои фамилию, имя,
+отчество и группу). На нём вы сможете выполнять задания курса.</p>
+
+<p>Доступ к серверу осуществляется по
+протоколу ssh, поэтому вам потребуется ssh клиент для подключения. В ОС Windows
+можно воспользоваться <a
+href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"><span style='color:#4183C4'>PuTTY</a> или любым другим клиентом. В
+Unix-like операционных системах вероятнее всего уже установлена консольная
+утилита <code><span style='font-family:"Times New Roman",serif;
+color:#333333;background:#F3F4F4'>ssh</code><span
+style='color:#333333'>, если нет, установите её из репозиториев вашего
+дистрибутива или воспользуйтесь любым другим доступным клиентом. И убедитесь,
+что ваше сетевое соединение стабильно, это необходимо для комфортной работы,
+протокол ssh очень к этому чувствителен.</p>
+
+<p>При выполнении контрольной работы выполняйте следующие рекомендации:</p>
+
+<p><b>1. Выбор варианта контрольной работы.</b>
+ Чтобы выбрать вариант контрольной работы нужно посчитать хеш-функцию от своего
+полного имени, фамилии (если есть) и отчества (если есть). Хеш-функция
+представляет собой остаток от деления на двадцать суммы порядковых номеров букв
+русского алфавита, составляющих ваши ФИО. К остатку в конце прибавляется единица.</p>
+
+<p>Нумерация букв алфавита:</p>
+
+<p>А=1,
+Б=2, В=3, Г=4, Д=5, Е=6, Ё=7, Ж=8, З=9, И=10, Й=11, К=12, Л=13, М=14, Н=15,
+О=16, П=17, Р=18, С=19, Т=20, У=21, Ф=22, Х=23, Ц=24, Ч=25, Ш=26, Щ=27, Ъ=28,
+Ы=29, Ь=30, Э=31, Ю=32, Я=33</p>
+
+<p><b>&nbsp;</b></p>
+
+
+
+ <div class="row">
+<div class="col-lg-9">
+<div class="alert alert-warning"><h4><br></h4>
+<p><b>Пример расчёта варианта контрольной работы:</b></p>
+<p>Пусть выбирается вариант контрольной работы по ФИО Милешко Антон Владимирович.</p>
+<p>N = (14+10+13+6+26+12+16 (Милешко) + 1+15+20+16+15 (Антон) +
+3+13+1+5+10+14+10+18+16+3+10+25 (Владимирович)) mod
+20 + 1 = (97+67+128) mod 20 + 1 = 292 mod 20 + 1 = 12 + 1 = 13,
+где N – номер варианта.</p>
+<p>Послерасчёта получается, что Милешко Антону Владимировичу нужно взять 13 вариант
+контрольной работы.</p>
+</div></div></div><br>
+
+
+
+
+<p><b>2.Пояснения по выполнению заданий.</b></p>
+<p>Контрольная работа состоит из трёх заданий.</p>
+
+<p><b>В первом задании контрольной работы</b> дана спецификация
+мультипроцессора и параметры запуска функции-ядра. Требуется рассчитать
+теоретическую заполняемость мультипроцессора и указать ограничивающий её
+фактор, если он есть. При сдаче работы в этом задании кроме ответа на вопрос
+нужно подробно описать ход решения задачи.</p>
+
+<p><b>Во втором задании</b> дана таблица, указывающая какая нить
+варпа к какому четырёхбайтовому слову обращается. Кроме ответа на вопрос,
+указанный в задании, нужно указать для каждого четырёхбайтового слова, в каком
+банке данных оно находится.</p>
+
+<p><b>В третьем задании</b> нужно реализовать один или два алгоритма
+и проанализировать их с точки зрения производительности или эффективности
+использования памяти. Все параллельные алгоритмы реализуются с применением
+технологии CUDA. Ответом на это задания
+является код рабочей программы/программ, результаты исследования (с указанием
+оборудования на котором проводились исследования и описанием данных). Если в
+задании нужно исследовать эффективность доступа к памяти при помощи утилиты nvprof,
+нужно подобрать подходящие для этого метрики профилирования. В том случае если
+эффективность доступа к памяти ниже 75%, нужно сформулировать причину низкой
+эффективности доступа к памяти. Если нужно сравнить производительность двух
+алгоритмов, следует указать абсолютное время выполнения каждого алгоритма и
+рассчитать коэффициент ускорения. Все исследования должны проводиться на данных
+размером не менее 4.500.000 четырёхбайтовых слов (или эквивалент для другого
+типа данных).</p>
+<br>
+
+<p>Для того чтобы контрольная работа была зачтена <b>нужно выполнить самостоятельно
+все три задания, допускаются небольшие недочёты</b>.</p>
+<br>
+
+<p>Оформление контрольной работы.</b> Контрольная работа оформляется в виде документа в формате .pdf.</p>
+
+<p>Первая страница – титульный лист с указанием ФИО (<b><i>полностью!</i></b>) и группы
+студента, выполнившего контрольную работу. Остальные страницы – ответы на задания с соответствующими пояснениями. </p>
+
+<p>Текст программ и результат их работы оформляется моноширинным шрифтом (например, 
+<span lang=EN-US style='font-size:12.0pt;line-height:107%;font-family:"Courier New"'>Courier</span>), размер шрифта 10-12.</p>
+
+<h3>Варианты заданий</h3>
+
+<div class="row">
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v01.docx" target="_blank">Скачать Вариант 1</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v02.docx" target="_blank">Скачать Вариант 2</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v03.docx" target="_blank">Скачать Вариант 3</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v04.docx" target="_blank">Скачать Вариант 4</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v05.docx" target="_blank">Скачать Вариант 5</a>         
+ </div>
+</div>
+
+
+<div class="row">
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v06.docx" target="_blank">Скачать Вариант 6</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v07.docx" target="_blank">Скачать Вариант 7</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v08.docx" target="_blank">Скачать Вариант 8</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v09.docx" target="_blank">Скачать Вариант 9</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v10.docx" target="_blank">Скачать Вариант 10</a>         
+ </div>
+</div>
+
+
+<div class="row">
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v11.docx" target="_blank">Скачать Вариант 11</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v12.docx" target="_blank">Скачать Вариант 12</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v13.docx" target="_blank">Скачать Вариант 13</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v14.docx" target="_blank">Скачать Вариант 14</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v15.docx" target="_blank">Скачать Вариант 15</a>         
+ </div>
+</div>
+
+<div class="row">
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v16.docx" target="_blank">Скачать Вариант 16</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v17.docx" target="_blank">Скачать Вариант 17</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v18.docx" target="_blank">Скачать Вариант 18</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v19.docx" target="_blank">Скачать Вариант 19</a>         
+ </div>
+ <div class="col-md-2"> 
+  <a class="btn btn-primary btn-block" href="cw/v20.docx" target="_blank">Скачать Вариант 20</a>         
+ </div>
+</div>
+<br><br><br>
+<br>
+
+
+ </div>
+ </div>
+
+ </div>
+ </div>
+ </div>
+
+ <!--Меню навигации-->
+ <div aria-label="..." class = "nav-menu">
+ <ul class="pager background-transition-slow">
+ <li title="Наверх" style = "margin-right:15px; "><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+ </ul>
+ </div>
+
+ </div>
+ <!-- jQuery -->
+ <script src="../lib/js/jquery.js"></script>
+
+ <!-- Bootstrap Core JavaScript -->
+ <script src="../lib/js/bootstrap.min.js"></script>
+
+ <!-- Scrolling Nav JavaScript -->
+ <script src="../lib/js/jquery.easing.min.js"></script>
+ <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

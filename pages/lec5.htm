@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 5. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">5. События, обработка ошибок и получение информации об устройстве</a></h3>
+
+<a href="#1" class=punkt>Контрольные вопросы
+
+</a><br>
+
+</div>
+<!--начало-->
+<p>CUDA API предоставляет набор функций для записи событий в любой части программы и набор функций для обработки ошибок. Для событий был введён новый тип данных cudaEvent_t, а для ошибок cudaError_t. Все функции CUDA API кроме функций-ядер возвращают объект типа cudaError_t. Функции-ядра помеченные спецификаторами __host__ или __device__ возвращают значения типа указанного при определении функции. Функции-ядра помеченные спецификатором __device__ всегда имеют тип данных void.</p>
+<p class=punkt>__host__ cudaError_t cudaEventCreate ( cudaEvent_t* event ) – создание объекта события. Параметр event – адрес объекта события.
+<p class=punkt>__host__  __device__ cudaError_t cudaEventDestroy ( cudaEvent_t event ) – удаление объекта события. Параметр event – объект события.
+<p class=punkt>__host__  __device__ cudaError_t cudaEventRecord ( cudaEvent_t event, cudaStream_t stream = 0 ) – запись события. Вызов этой функции говорит о том, что в точке её вызова разработчик подразумевает, что произошло какое-то событие. Параметр event – объект события. Параметр stream – номер потока, по умолчанию он равен нулю. Подробнее про потоки будет рассказано ниже, а пока этот параметр можно игнорировать.
+<p class=punkt>__host__ cudaError_t cudaEventSynchronize ( cudaEvent_t event ) – ожидание завершения всех асинхронных команд (синхронизация). Параметр event – объект события.
+<p class=punkt>__host__ cudaError_t cudaEventElapsedTime ( float* ms, cudaEvent_t start, cudaEvent_t end ) – расчёт времени прошедшего между событиями start и stop. Параметры start и stop – объекты событий, событие start должно произойти раньше для корректного расчёта. Параметр ms – адрес по которому будет записано время в миллисекундах.
+<p class=punkt>char* cudaGetErrorString(cudaError_t error) – возвращает описание ошибки по её числовому коду. Параметр error – код ошибки.
+<p class=punkt>cudaError_t cudaGetLastError() – возвращает код последней произошедшей ошибки. Когда при вызове функции CUDA API или функции-ядра возникает ошибка, её код записывается в специальную глобальную переменную. Эта функция основной способ получения кода ошибки, возникшей в функции-ядре.
+</p>
+<br>
+<p>Параллельный алгоритм сложения двух векторов с измерением времени выполнения операций и обработкой ошибок:</p>
+<pre class="prettyprint">
+#include &lt;stdlib.h&gt;
+#include <stdio.h>
+#define N 100000
+
+__global__ void kernel (int *a, int *b, int *c) {
+	int i = threadIdx.x + blockIdx.x * blockDim.x;
+	if(i < N) {
+		c[i] = a[i] + b[i];
+	}
+
+}
+
+int main () {
+	//Выделение памяти на хосте
+	int *ha = (int*)malloc(sizeof(int) * N);
+	int *hb = (int*)malloc(sizeof(int) * N);
+	int *hc = (int*)malloc(sizeof(int) * N);
+
+	for(int i = 0; i < N; ++i) {
+		ha[i] = 1;
+		hb[i] = 1;
+	}
+	
+	int *dc;
+	int *da;
+	int* db;
+	
+	//Выделение памяти на устройстве
+	printf("Malloc da - %s\n", cudaGetErrorString( cudaMalloc((void**) &da, sizeof(int) * N) ));
+	printf("Malloc db - %s\n", cudaGetErrorString( cudaMalloc((void**) &db, sizeof(int) * N) ));
+	printf("Malloc dc - %s\n", cudaGetErrorString( cudaMalloc((void**) &dc, sizeof(int) * N) ));
+
+	//Создание и инициализация объектов событий	
+	cudaEvent_t start, stop;
+	printf("Create event start - %s\n", cudaGetErrorString( cudaEventCreate(&start) ));
+	printf("Create event stop - %s\n", cudaGetErrorString( cudaEventCreate(&stop) ));
+	
+	//Точка программы в которой произошло событие start
+	printf("Event start record - %s\n", cudaGetErrorString( cudaEventRecord(start,0) ));
+
+	//Копирование исходных данных с хоста на устройство
+	printf("Copy ha to da - %s\n", cudaGetErrorString( cudaMemcpy(da, ha, sizeof(int) * N, cudaMemcpyHostToDevice) ));
+	printf("Copy hb to db - %s\n", cudaGetErrorString( cudaMemcpy(db, hb, sizeof(int) * N, cudaMemcpyHostToDevice) ));
+	
+	//Выставляем размер блока = 128 нитей
+	int blockSize = 128;
+	//Динамически высчитываем сколько блоков понадобится для вычислений
+	int gridSize = N / blockSize + 1;
+	
+	kernel<<<gridSize, blockSize>>>(da, db, dc);
+	printf("Kernel launch - %s\n", cudaGetErrorString( cudaGetLastError() ));
+	//Копирование результата с устройства на хост
+	printf("Copy dc to hc - %s\n", cudaGetErrorString( cudaMemcpy(hc, dc, sizeof(int) * N, cudaMemcpyDeviceToHost) ));
+
+	//Точка в программе в которой произошло событие stop
+	printf("Record stop event - %s\n", cudaGetErrorString( cudaEventRecord(stop,0) ));
+	//Ожидание завершения всех асинхронных операций
+	printf("Synchronize - %s\n", cudaGetErrorString( cudaEventSynchronize(stop) ));
+
+	//Расчёт прошедшего времени между событиями start и stop
+	float elapsedTime;
+	printf("Elapsed time - %s\n", cudaGetErrorString( cudaEventElapsedTime(&elapsedTime, start, stop) ));
+
+	//Уничтожение объектов событий  
+	printf("Destroy start event - %s\n", cudaGetErrorString( cudaEventDestroy(start) ));
+	printf("Destroy stop event - %s\n", cudaGetErrorString( cudaEventDestroy(stop) ));
+	
+	printf("Elapsed time = %f\n", elapsedTime);
+	//Осовбождение памяти выделенной на устройстве
+	printf("Free da - %s\n", cudaGetErrorString( cudaFree(da) ));
+	printf("Free db - %s\n", cudaGetErrorString( cudaFree(db) ));
+	printf("Free dc - %s\n", cudaGetErrorString( cudaFree(dc) ));
+	
+	return 0;
+
+}
+</Pre>
+<p>Вывод программы:</p>
+<p class=punkt>Malloc da - no error
+<p class=punkt>Malloc db - no error
+<p class=punkt>Malloc dc - no error
+<p class=punkt>Create event start - no error
+<p class=punkt>Create event stop - no error
+<p class=punkt>Event start record - no error
+<p class=punkt>Copy ha to da - no error
+<p class=punkt>Copy hb to db - no error
+<p class=punkt>Kernel launch - no error
+<p class=punkt>Copy dc to hc - no error
+<p class=punkt>Record stop event - no error
+<p class=punkt>Synchronize - no error
+<p class=punkt>Elapsed time - no error
+<p class=punkt>Destroy start event - no error
+<p class=punkt>Destroy stop event - no error
+<p class=punkt>Elapsed time = 0.413984
+<p class=punkt>Free da - no error
+<p class=punkt>Free db - no error
+<p class=punkt>Free dc - no error
+<p>Вывод программы, если поменять размер блока со 128 на 1280:</p>
+<p class=punkt>Malloc da - no error
+<p class=punkt>Malloc db - no error
+<p class=punkt>Malloc dc - no error
+<p class=punkt>Create event start - no error
+<p class=punkt>Create event stop - no error
+<p class=punkt>Event start record - no error
+<p class=punkt>Copy ha to da - no error
+<p class=punkt>Copy hb to db - no error
+<p class=punkt>Kernel launch - invalid configuration argument
+<p class=punkt>Copy dc to hc - no error
+<p class=punkt>Record stop event - no error
+<p class=punkt>Synchronize - no error
+<p class=punkt>Elapsed time - no error
+<p class=punkt>Destroy start event - no error
+<p class=punkt>Destroy stop event - no error
+<p class=punkt>Elapsed time = 0.327296
+<p class=punkt>Free da - no error
+<p class=punkt>Free db - no error
+<p class=punkt>Free dc - no error
+<p>Программа сигнализирует, что параметры запуска функции-ядра некорректны. Это произошло потому что размер блока не должен превышать 1024 нити.
+<p class=punkt>cudaError_t cudaGetDevicePropertis (cudaDeviceProp* props, int deviceNo) – получение информации об устройстве. Параметр props – адрес на структуру куда будет записана информация об устройстве. Параметр deviceNo – номер устройства. Устройства нумеруются с нуля. Структура cudaDeviceProp содержит большое количество информации об устройстве такой как максимальное количество регистров на блок, максимальный размер разделяемой памяти на блок, уникальный идентификатор устройства (uuid), может ли устройство исполнять несколько функций-ядер параллельно и т.д. Подробнее о всех полях структуры cudaDeviceProp можно узнать из официальной документации Nvidia</p>
+<br>
+
+<a name=1 class="anchor"></a>
+<h3>Контрольные вопросы</h3>
+<p>1.	Как измерить время вычислений проводимых на GPU?
+<p>2.	Какие функции в CUDA API существуют для обработки ошибок?
+<p>3.	Добавьте обработку ошибок в алгоритмы, реализованные в предыдущей главе и измерения времени выполнения при помощи событий.
+<p>4.	Сравните время выполнения последовательного и параллельного алгоритмов с длинами строк от 2^10 до 2^23. <B>Замеры времени для алгоритма, исполняющегося на GPU, всегда нужно проводить включая пересылки памяти между хостом и устройством
+</b>
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec4.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec6.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

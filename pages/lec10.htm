@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 10. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">10. Потоки (streams) в CUDA</a></h3>
+
+<a href="#1" class=punkt>Контрольные вопросы
+
+</a><br>
+</div>
+<!--начало-->
+<p>В CUDA потоком называются операции, выполняющиеся последовательно, но при этом операции, принадлежащие разным потокам, могут исполняться параллельно. Если не указано явно в каком потоке выполняются операции, то они по умолчанию выполняются в нулевом потоке.</p>
+
+<p>В CUDA следующие действия считаются независимыми и могут выполняться параллельно друг с другом: вычисления на хосте, вычисления на устройстве, копирование данных с хоста на устройство, копирование данных с устройства на хост, копирование данных в пределах устройства, копирование данных между устройствами.</p>
+<p>Операции запуска функции-ядра, копирование данных в пределах устройства, копирование данных с хоста на устройство объёмом меньше чем 64 КБ, копирование данных при помощи функций с суффиксом Async. Т.е. вызов этих операций не блокирует исполнение команд на хосте.</p>
+<p>Две команды, находящихся в разных потоках, не могут выполняться параллельно, если выполняются следующие действия: выделение закреплённой памяти, копирование данных в пределах устройства, любая команда в потоке NULL.</p>
+<p>Чаще всего потоки используются для асинхронной передачи данных с хоста на устройство и с устройства на хост.</p>
+<p><img src="img/img020.jpg"></p>
+<p>Рис. 19 – синхронизированное исполнение алгоритма и с использованием потоков</p>
+<br>
+<p>На рисунке 19 показано два сценария. Первый сценарий – последовательно выполняется копирование всех данных на устройство, затем исполняется функция-ядро, после этого выполняется копирование результата на хост. Часто возникает ситуация, что для части вычислений нет необходимости во всех исходных данных, например, того чтобы получить один результирующий элемент при умножении матриц не требуется использовать все элементы исходных матриц, нужны только конкретная строка и конкретный столбец. В таком случае имеет смысл разбить исходный алгоритм на части и передавать только нужную для вычислений часть данных и копировать на хост полученную часть результата. Второй сценарий на рисунке 19 показывает разбиение исходного алгоритма на 4 потока. Все входные данные поделились на четыре части, каждая часть копируется на устройство после того как скопируется предыдущая часть, но т.к. передача данных между хостом и устройством может выполняться параллельно с функцией-ядром, если они находятся в разных потоках, по окончанию копирования очередной порции данных на устройство функция-ядро заканчивает обработку предыдущей порции данных и может отправить часть ответа обратно на хост. За счёт этого можно получить существенное ускорение.</p>
+<p>Для работы с потоками в CUDA добавлен тип данных cudaStream_t. Чтобы создать поток нужно вызвать функцию __host__ cudaError_t cudaStreamCreate ( cudaStream_t* pStream ), параметр pStream адрес по которому будет записан созданный объект. Для асинхронного копирования данных нужно вызвать функцию __host__  __device__ cudaError_t cudaMemcpyAsync ( void* dst, const void* src, size_t count, cudaMemcpyKind kind, cudaStream_t stream = 0 ) – копирует count байт из src в dst в направлении kind (cudaMemcpyHostToDevice или cudaMemcpyDeviceToHost) в потоке stream. Для удаления потока используется функция __host__  __device__ cudaError_t cudaStreamDestroy ( cudaStream_t stream ), где stream – объект потока. Чтобы указать в каком потоке выполняться функции-ядру нужно третьим (или четвёртым, если выделяется динамическая разделяемая память) передать объект потока в качестве параметра во время запуска.</p>
+<p>Пример использования потоков:</p>
+<pre class="prettyprint">
+// size - размер порции данных
+cudaStream_t stream[2];
+for (int i = 0; i < 2; ++i) {
+    cudaStreamCreate(&stream[i]);
+}
+float* hostPtr;
+cudaMallocHost(&hostPtr, 2 * size);
+
+for (int i = 0; i < 2; ++i) {
+    cudaMemcpyAsync(inputDevPtr + i * size, hostPtr + i * size,
+                    size, cudaMemcpyHostToDevice, stream[i]);
+    MyKernel <<<100, 512, 0, stream[i]>>>
+          (outputDevPtr + i * size, inputDevPtr + i * size, size);
+    cudaMemcpyAsync(hostPtr + i * size, outputDevPtr + i * size,
+                    size, cudaMemcpyDeviceToHost, stream[i]);
+}
+
+for (int i = 0; i < 2; ++i) {
+    cudaStreamDestroy(stream[i]);
+}
+</pre>
+<p>Копирование данных при помощи cudaMemcpyAsync работает только с pinned memory.</p>
+<p class=punkt>__host__ cudaError_t cudaDeviceSynchronize() – ожидает завершения всех выполняющихся потоков.
+<p class=punkt>__host__ cudaError_t cudaStreamSynchronize ( cudaStream_t stream ) – ожидает завершения потока stream.
+<p class=punkt>__host__ cudaError_t cudaLaunchHostFunc ( cudaStream_t stream, cudaHostFn_t fn, void* userData ) – вставляет вызов функции хоста fn (callback) в поток stream. Параметр userData – параметры передаваемые в callback функцию.
+</p><p>Пример вызова calback функции:</p>
+<pre class="prettyprint">
+void CUDART_CB MyCallback(cudaStream_t stream, cudaError_t status, void *data){
+    printf("Inside callback %d\n", (size_t)data);
+}
+...
+for (size_t i = 0; i < 2; ++i) {
+    cudaMemcpyAsync(devPtrIn[i], hostPtr[i], size, cudaMemcpyHostToDevice, stream[i]);
+    MyKernel<<<100, 512, 0, stream[i]>>>(devPtrOut[i], devPtrIn[i], size);
+    cudaMemcpyAsync(hostPtr[i], devPtrOut[i], size, cudaMemcpyDeviceToHost, stream[i]);
+    cudaLaunchHostFunc(stream[i], MyCallback, (void*)i);
+}
+</pre>
+<p>В примере выше функция MyCallback будет вызываться после каждой передачи данных с устройства на хост. Если вызвать эту функцию не через cudaLaunchHostFunc, она выполнится асинхронно с потоками, т.е. результат её работы можно будет ожидать в любой момент времени без блокировки потоков.</p>
+<br>
+
+<a name=1 class="anchor"></a>
+<h3>Контрольные вопросы</h3>
+<p>1.	Что такое поток в CUDA?
+<p>2.	За счёт чего достигается ускорение вычислений при использовании потоков?
+<p>3.	Какие операции в двух потоках могут исполняться параллельно?
+<p>4.	Когда операции в двух потоках не могут исполняться параллельно?
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec9.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec11.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

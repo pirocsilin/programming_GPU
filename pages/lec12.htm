@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 12. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">12. Заполняемость мультипроцессоров</a></h3>
+
+<a href="#1" class=punkt>Контрольные задания
+
+</a><br>
+</div>
+<!--начало-->
+<p>В отличие от CPU, который задержку обращения к памяти пытается скрыть за счёт большого размера кэша, GPU скрывает задержку обращений в память за счёт большой степени параллелизма. Нити GPU очень легковесны и переключение контекстов происходит практически мгновенно. При любом обращении в глобальную память GPU мгновенно ставить на исполнение варп, нити которого готовы выполнять команды. Поэтому важно максимизировать количество варпов исполняемых мультипроцессором.</p>
+
+<p>Заполняемость мультипроцессора – отношение фактического количества работающих варпов на мультипроцессоре к максимальному количеству поддерживаемых мультипроцессором варпов. Заполняемость зависит количества блоков, размера блоков, количества регистров, выделяемых на нить, количества разделяемой памяти и т.д. Для каждого устройства зная его спецификацию и параметры запуска задачи, можно рассчитать какой процент заполняемости будет достигнут при выполнении задачи на данном устройстве – этот параметр называется теоретической заполняемостью мультипроцессора. Например, пусть есть устройство со следующими параметрами:</p>
+<p class=punkt>Макс. варпов на мультипроцессор 64
+<p class=punkt>Максимальное количество блоков на мультипроцессор 32
+<p class=punkt>Регистры на мультипроцессор 65536
+<p class=punkt>Разделяемая память на мультипроцессор (байт) 65536
+<p class=punkt>Размер блока был выбран следующим: 128 нитей (= 4 варпа)
+</p>
+<p>Теперь нужно рассчитать ограничения количества допустимых блоков по всем параметрам. Максимальное количество блоков, ограниченное размером блока = 64/4 = 16 блоков на SM. Разделяемая память на блок = 5000 байт. Макс. количество блоков, ограниченное общей памятью = 65536/5000 = 13,1 ~ 13 блоков. Регистров на нить = 48; на блок = 128 * 48 = 6144; максимальное количество блоков, ограниченное количеством регистров = 65536/6144 = 10,67 ~ 10 (ограничивающий параметр!). После того как нашли ограничивающий параметр переводим блоки в варпы и делим получившееся чило на максимально количество допустимых варпов на мультипроцессоре. Таким образом, теоретическая заполняемость составляет 10 * 4/64 = 40/64 = 0,625.</p>
+<p>Для того чтобы повысить теоретическую заполняемость нужно попытаться изменить параметры запуска программы – размер блока, количество регистров на нить и т.д.</p>
+<p>Для того чтобы измерить реальную заполняемость можно воспользоваться профилировщиком. Для утилиты nvprof есть опция achieved_occupancy. Реальная заполняемость будет всегда ниже теоретической за счёт того, что нельзя учесть все мельчайшие факторы при ручном расчёте.</p>
+<p>Ранее было сказано, что все нити варпа выполняются физически одновременно. На самом деле это не совсем так. Есть некоторая функция-ядро:
+</p>
+<pre class="prettyprint">
+__global__ void kernel () {
+    int i = threadIdx.x + blockDim.x blockIdx.x;
+    if (i % 2 == 0) {
+        int a = i * 2;
+    } else {
+        int b = i - 4;
+    }
+}
+</pre>
+<p>Если эту функцию-ядро выполняет нить с чётным глобальным номером, то она проходит в ветку if, иначе в ветку else. Планировщик варпов работает таким образом, что выдаёт нитям варпа по две последовательных инструкции, которые должны быть одинаковыми для всех нитей. Для кода из примера выше это невозможно. В этом случае не все нити варпа будут работать параллельно. Сначала запустятся нити обрабатывающие ветку if и после того как они завершат обработку ветки, запустятся на исполнения нити обрабатывающие ветку else. Т.е. варп выполнится не за время t, а за время 2t, т.к. разделился на две части. Этот эффект называется дивергенция варпов. При написании кода с использованием технологии CUDA нужно стараться минимизировать количество условных переходов с веткой else. В коде ниже дивергенции варпов не возникает, потому что часть нитей варпа просто простаивает во время обработки условного перехода, а не ждёт своей очереди на исполнение:</p>
+
+<pre class="prettyprint">
+__global__ void kernel () {
+    int i = threadIdx.x + blockDim.x blockIdx.x;
+    if (i % 2 == 0) {
+        int a = i * 2;
+    }
+}
+</pre>
+
+<a name=1 class="anchor"></a>
+<h3>Контрольные задания</h3>
+<p>Дана спецификация графического процессора: 
+<p>Максимальное число варпов на мультипроцессор: 32
+<p>Максимальное число блоков на мультипроцессор: 16
+<p>Максимальное количество 32-х битных регистров на мультипроцессор: 65536
+<p>Максимальное количество 32-х битных регистров на блок: 65536
+<p>Максимальное количество 32-х битных регистров на нить: 255
+<p>Размер разделяемой памяти мультипроцессора (байт): 65536
+<p>Размер разделяемой памяти блока (байт): 49152
+<p>Параметры запускаемой программы:
+<p>Размер блока: 32
+<p>Разделяемая память на блок (байт): 1000
+<p>32-х битных регистров на нить: 50
+<p>Чему равна теоретическая заполняемость? Какой фактор её ограничивает?
+
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec11.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec13.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

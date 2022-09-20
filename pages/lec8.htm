@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 8. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">8. Разделяемая память</a></h3>
+
+<a href="#1" class=punkt>Контрольные вопросы
+
+</a><br>
+</div>
+<!--начало-->
+<p><i>Разделяемая память (shared memory)</i> – небольшая по объёму, но очень быстрая по скорости доступа к данным память, потому что расположена рядом с вычислительными мощностями мультипроцессора (on-chip). Является ресурсом мультипроцессора, т.е. у каждого SM своя разделяемая память. Следовательно область видимости данных в разделяемой памяти – блок. Вся разделяемая память разбита на 32 банка данных. Последовательно расположенные 32-х битные слова расположены в последовательных банках памяти. Пропускная способность каждого банка 32 бита за два такта. Если одновременно идёт обращение к разным 32-х битным словам одного банка, возникает конфликт банков, степень которого определяется количеством различных 32-х битных слов к которым обращаются. Все конфликтные обращения обрабатываются последовательно, но если несколько или все нити варпа обращаются к одному и тому же 32-х байтовому слову конфликта не возникает. Если идёт обращение всех нитей такая ситуация называется broadcast, если обращаются несколько нитей –<i> multicast</i>.</p>
+
+<p><img src="img/img019.jpg"></p>
+<p>Рис. 18 – распределение 32-х битных слов по банкам данных</p>
+<br>
+<p>Выделить разделяемую память можно двумя способами – статически и динамически. Чтобы выделить разделяемую память статически нужно определить переменную на устройстве со спецификатором __shared__. Например:</p>
+<pre class="prettyprint">
+    __shared__ int val;
+    __shared__ int arr[128];
+    val = 6;
+    for(int i = 0; i < 128; ++i) {
+        arr[i] = i;
+    }
+}
+</pre>
+<p>Использование разделяемой памяти ничем не отличается от использования обычных переменных, но нельзя присвоить значение переменной со спецификатором __shared__ в момент объявления, только после этого (__shared__ int val = 0 – будет ошибкой).</p>
+<p>Чтобы выделить разделяемую память динамически нужно объявить на устройстве указатель на разделяемую память со спецификатором extern, например extern __shared__ int array[] и при вызове функции-ядра указать третьим необязательным параметром сколько байт памяти нужно выделить на блок. Например:</p>
+<pre class="prettyprint">
+#define N 100
+
+__global__ void kernel() {
+    extern __shared__ int array[];
+    extern __shared__ int array2[];
+    //Т.к. разделяемая память динамически выделется сразу на блок
+    //для нескольких массивов её нужно распеределить вручную
+    array2 = &(array[10]);
+    for(int i = 0; i < 10; ++i) {
+        array[i] = i;
+    }
+    
+    for(int i = 0; i < N - 10; ++i) {
+        array2[i] = i;
+    }
+}
+
+int main () {
+    kernel<<<5, 128, N * sizeof(int)>>>();
+    return 0;
+}
+</pre>
+<p>Обобщённая схема работы с разделяемой памятью выглядит следующим образом: копирование данных с хоста в глобальную память устройства -> копирование из глобальной памяти в разделяемую -> расчёты -> копирование результата в глобальную память -> копирование результата на хост. И т.к. разделяемая память намного меньшего объёма чем глобальная память часть копирование из глобальной памяти в разделяемую -> расчёты-> копирование результата в глобальную память происходит итеративно. Часть входных данных загружается в разделяемую память, над ней выполняются операции, результат копируется в глобальную память и в разделяемую память загружается следующая порция данных. В связи с этим возникает потребность в синхронизации нитей, работающих с разделяемой памятью (например, нужно быть уверенным, что все необходимые данные загрузились или все нити закончили работу с разделяемой памятью перед загрузкой новой порции данных в неё). Для этого используется функция __synchthreads() – барьерная синхронизация нитей блока. Нити блока будут ожидать в этой точке завершения работы других нитей блока.</p>
+<p>Пример, демонстрирующий влияние конфликтов банков памяти:</p>
+<pre class="prettyprint">
+#define MEMORY_SIZE 4096
+
+using Type = uint32_t;
+
+__global__ void kernel(int offset)
+{
+    __shared__ Type sharedMem[MEMORY_SIZE];
+
+    int threadId = threadIdx.x;
+
+    // Инициализация разделяемой памяти
+    if (threadId == 0)
+    {
+        for (int i = 0; i < MEMORY_SIZE; i++) sharedMem[i] = 0;
+    }
+    __syncthreads();
+
+    // Запись в разделяемую память, offset - смещение доступа
+    //к разделяемой памяти (в 4-х байтных словах)
+    uint32_t index = threadId * offset;
+    for (int i = 0; i < 10000; i++)
+    {
+        sharedMem[index] += index * i;
+        index += 32;
+        index %= MEMORY_SIZE;
+    }
+</pre>
+<p>Вывод nvprof для offset = 1 (нити варпа считывают данные последовательно без смещения):</p>
+<pre class="prettyprint">
+Invocations            Metric Name                       Min         Max         Avg
+1000                   shared_ld_bank_conflict           0           0           0  
+1000                   shared_st_bank_conflict           0           0           0  
+1000                         shared_efficiency           95.74%      95.74%      95.74%
+1000      shared_load_transactions_per_request           1.000000    1.000000    1.000000
+Вывод nvprof для offset = 32 (конфликт банков данных 32-й степени):
+Invocations            Metric Name                  Min         Max         Avg
+1000                   shared_ld_bank_conflict      310000      310000      310000
+1000                   shared_st_bank_conflict      310000      310000      310000
+1000                         shared_efficiency      3.14%       3.14%       3.14%
+1000      shared_load_transactions_per_request      32.000000   32.000000   32.000000
+</pre>
+<p>Для профилирования использовались события: shared_ld_bank_conflict – количество конфликтов банков памяти при считывании данных, shared_st_bank_conflict– количество конфликтов банков памяти при записи данных. Метрики: shared_efficiency – эффективность использования пропускной способности шины данных разделяемой памяти, shared_load_transactions_per_request – количество транзакций при каждом запросе к разделяемой памяти.</p>
+<br>
+
+<a name=1 class="anchor"></a>
+<h3>Контрольные вопросы</h3>
+<p>1.	Что такое разделяемая память?
+<p>2.	Что такое банк памяти?
+<p>3.	Что такое конфликт банков памяти? Как избавиться от конфликтов банков памяти?
+<p>4.	Как выделить разделяемую память?
+<p>5.	Как скопировать туда данные с хоста?
+<p>6.	В каких случаях использование разделяемой памяти повышает эффективность вычислений?
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec7.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec9.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="do.sibsutis.ru">
+
+  <title>Лекция 9. Конспект лекций</title>
+	
+	<link rel="icon" type="image/png" href="../lib/css/favicon.png">
+  <!-- Bootstrap Core CSS -->
+  <link href="../lib/css/bootstrap.css" rel="stylesheet">
+  <link href="../lib/css/prettify.css" rel="stylesheet">	
+  <!-- Custom CSS -->
+  <link href="../lib/css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+ <div class="container">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+   <li class="hidden"> <a class="page-scroll" href="#page-top"></a> </li>
+	 
+	 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+	 
+   <a class="navbar-brand " href="../index.htm"> 
+  <text class = "hidden-xs">Программирование графических процессоров</text> 
+  <text class = "visible-xs">ПГП</text>
+	 </a>
+  </div>
+
+  <!-- Collect the nav links, forms, and glyphicon glyphicon-list-alt content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   
+	 <!-- <ul class="nav navbar-nav">
+		<li><a href="#"></a></li> 
+   </ul> -->
+	
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+		<button type="button" class="navbar-toggle dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>	   
+		<a class = "dropdown-toggle visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Материалы</a>
+     <ul class="dropdown-menu">
+    <li><a href="../index.htm">Аннотация курса</a></li>
+      <li role="separator" class="divider"></li>
+  
+ <li><a href="lec_index.htm">Теория</a></li>
+ 
+<li><a href="labs.htm">Лабораторные работы</a></li>  
+ <li><a href="c_work.htm">Контрольная работа</a></li>
+
+ 
+      <li role="separator" class="divider"></li>
+   
+
+      <li><a href="lit.htm">Литература</a></li>
+      <!--li><a href="q.htm">Вопросы для самопроверки</a></li-->			
+     </ul>
+ </li>
+ </ul>
+  </div><!-- /.navbar-collapse -->
+ </div><!-- /.container-fluid -->
+</nav>
+
+
+  <div id="intro" class="section content-section ">
+    <div class="container">
+       <div class="row">
+        <div class="col-lg-12">	
+
+
+<!-- содержание -->	
+<div class="page-header">				
+<h3><a href="#">9. Pinned memory (page-locked memory, закреплённая память)</a></h3>
+
+<a href="#1" class=punkt>Контрольные вопросы
+
+</a><br>
+</div>
+<!--начало-->
+<p>По умолчанию вся память на хосте является подкачиваемой (pageble). При копировании данных с хоста на устройство CUDA Driver выделяет pinned memory на хосте и перемещает туда данные, только после этого перемещает данные из pinned memory в память устройство. Процесс можно оптимизировать, выделив pinned memory заранее, убрав одну пересылку данных на хосте.</p>
+
+<p>Для работы с pinned memory есть следующие функции:</p>
+<p class=punkt>__host__ cudaError_t cudaMallocHost ( void** ptr, size_t size ) – выделяет page-locked memory размером size байт, адрес выделенной памяти возвращает в ptr.
+<p class=punkt>__host__ cudaError_t cudaHostAlloc ( void** pHost, size_t size, unsigned int  flags ) – выделяет page-locked memory размером size байт, адрес выделенной памяти записывается в pHost, flags – флаги свойств выделяемой памяти. Флаги могут быть следующими: cudaHostAllocDefault – выделение памяти без специфичных свойств, вызов cudaHostAlloc будет аналогичен вызову cudaMallocHost. cudaHostAllocPortable – выделенная память может использоваться всеми GPU в системе. cudaHostAllocMapped – память отображается в адресное пространство устройства. cudaHostAllocWriteCombined – выделяет write-combined память, некэшируемую память, данные из которой могут быстрее передаваться по шине PCI Express. Характеризуется высокой скоростью записи в неё и низкой скоростью чтения из неё с хоста, хорошо подходит для передач данных в направлении хост -> устройство.
+<p class=punkt>__host__ cudaError_t cudaHostRegister ( void* ptr, size_t size, unsigned int  flags ) – резервирует ранее уже выделенную память размером size байт, находящуюся по адресу ptr, как page-locked. Параметр flags аналогичен этому параметру в функции cudaHostAlloc.
+<p class=punkt>__host__ cudaError_t cudaFreeHost ( void* ptr ) – высвобождает pinned memory по адресу ptr.
+
+<p>Сравнение скорости передачи данных с хоста на устройство и с устройства на хост разных типов памяти (pageble и pinned):</p>
+<pre class="prettyprint">
+//Функция выводит время копирования данных с хоста на устройство и наоборот
+void profileCopies(float        *h_a, 
+                   float        *h_b, 
+                   float        *d, 
+                   unsigned int  n,
+                   char         *desc)
+{
+  printf("\n%s transfers\n", desc);
+
+  unsigned int bytes = n * sizeof(float);
+    
+  cudaEvent_t startEvent, stopEvent; 
+  cudaEventCreate(&startEvent);
+  cudaEventCreate(&stopEvent);
+
+  //Замер времени копирования с хоста на устройство
+  cudaEventRecord(startEvent, 0);
+  cudaMemcpy(d, h_a, bytes, cudaMemcpyHostToDevice);
+  cudaEventRecord(stopEvent, 0);
+  cudaEventSynchronize(stopEvent);
+
+  float time;
+  cudaEventElapsedTime(&time, startEvent, stopEvent);
+  printf("  Host to Device bandwidth (GB/s): %f\n", bytes * 1e-6 / time);
+    
+  //Замер времени копирования с устройства на хост
+  cudaEventRecord(startEvent, 0);
+  cudaMemcpy(h_b, d, bytes, cudaMemcpyDeviceToHost);
+  cudaEventRecord(stopEvent, 0);
+  cudaEventSynchronize(stopEvent);
+
+  cudaEventElapsedTime(&time, startEvent, stopEvent);
+  printf("  Device to Host bandwidth (GB/s): %f\n", bytes * 1e-6 / time);
+
+  for (int i = 0; i < n; ++i) {
+    if (h_a[i] != h_b[i]) {
+      printf("*** %s transfers failed ***\n", desc);
+      break;
+    }
+  }
+
+  cudaEventDestroy(startEvent);
+  cudaEventDestroy(stopEvent);
+}
+
+int main()
+{
+  unsigned int nElements = 4*1024*1024;
+  const unsigned int bytes = nElements * sizeof(float);
+
+  // host arrays
+  float *h_aPageable, *h_bPageable;   
+  float *h_aPinned, *h_bPinned;
+
+  // device array
+  float *d_a;
+
+  // allocate and initialize
+  h_aPageable = (float*)malloc(bytes);                    // host pageable
+  h_bPageable = (float*)malloc(bytes);                    // host pageable
+  cudaMallocHost((void**)&h_aPinned, bytes);			  // host pinned
+  cudaMallocHost((void**)&h_bPinned, bytes); 			  // host pinned
+  cudaMalloc((void**)&d_a, bytes);				          // device
+
+  for (int i = 0; i < nElements; ++i) h_aPageable[i] = i;      
+  memcpy(h_aPinned, h_aPageable, bytes);
+  memset(h_bPageable, 0, bytes);
+  memset(h_bPinned, 0, bytes);
+
+  printf("Transfer size (MB): %d\n", bytes / (1024 * 1024));
+
+  // Замеры времени копирования
+  profileCopies(h_aPageable, h_bPageable, d_a, nElements, "Pageable");
+  profileCopies(h_aPinned, h_bPinned, d_a, nElements, "Pinned");
+
+  printf("n");
+
+  
+  cudaFree(d_a);
+  cudaFreeHost(h_aPinned);
+  cudaFreeHost(h_bPinned);
+  free(h_aPageable);
+  free(h_bPageable);
+
+  return 0;
+}
+</pre>
+<p>Вывод:</p>
+<pre class="prettyprint">
+Pageable transfers
+  Host to Device bandwidth (GB/s): 5.368503
+  Device to Host bandwidth (GB/s): 5.627219
+
+Pinned transfers
+  Host to Device bandwidth (GB/s): 6.186581
+  Device to Host bandwidth (GB/s): 6.670246
+</pre>
+
+
+<a name=1 class="anchor"></a>
+<h3>Контрольные вопросы</h3>
+<p>1.	Что такое pageble memory?
+<p>2.	Что такое pinned memory?
+<p>3.	Как выделить pinned memory?
+<p>4.	Почему используя pinned memory можно увеличить скорость пересылки данных?
+<p>5.	Исследуйте скорость передачи данных с хоста на устройство и обратно для pageble memory и pinned memory.
+
+</p>
+
+<br><br>
+<!--конец-->
+      
+				
+
+
+				</div>
+			</div>
+			
+      </div>
+    </div>
+  </div>
+	
+	<!--Меню навигации по Темам -->	
+	<div aria-label="..." class = "nav-menu">
+	 <ul class="pager background-transition-slow">
+		 <li title="Наверх" style = "margin-right:15px;	"><a class = "glyphicon glyphicon-menu-up page-scroll" href="#page-top"></a></li>
+		 <li title="К предыдущей лекции"><a class = "glyphicon glyphicon-menu-left page-scroll" href="lec8.htm"></a></li>
+		 <li title="В содержание"><a class = "glyphicon glyphicon-list-alt" href="lec_index.htm"></a></li>
+		 <li title="К следующей лекции"><a class = "glyphicon glyphicon-menu-right page-scroll" href="lec10.htm"></a></li>
+	 </ul>
+	</div>
+	<!---->
+	
+	</div>
+  <!-- jQuery -->
+  <script src="../lib/js/jquery.js"></script>
+
+<script src="../lib/css/prettify.js"></script>
+<script type="text/javascript">
+  !function ($) {
+$(function(){
+window.prettyPrint && prettyPrint()  
+    })
+  }(window.jQuery)
+</script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../lib/js/bootstrap.min.js"></script>
+
+  <!-- Scrolling Nav JavaScript -->
+  <script src="../lib/js/jquery.easing.min.js"></script>
+  <script src="../lib/js/scrolling-nav.js"></script>
+
+</body>
+
+</html>
