@@ -1,1 +1,3 @@
-# programming_GPU
+# programming_GPU 
+
+https://pirocsilin.github.io/programming_GPU
